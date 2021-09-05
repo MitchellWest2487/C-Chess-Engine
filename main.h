@@ -3,8 +3,6 @@
 
 typedef unsigned long long U64;
 
-#define BRD_NUM 120
-#define MAX_HM 4096
 #define STARTING_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 #define INT_TO_CHAR "PNBRQKpnbrqk"
 
@@ -15,7 +13,7 @@ enum { WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK};
 enum{FA, FB, FC, FD, FE, FF, FG, FH};
 
 //rank encoding
-enum{R1,R2,R3,R4,R5,R6,R7,R8};
+enum{R1, R2, R3, R4, R5, R6, R7, R8};
 
 //squares
 enum{
@@ -32,8 +30,10 @@ enum{
 //castling rights
 enum{WKC = 1, WQC = 2, BKC = 4, BQC = 8};
 
+//color encoding
 enum{WHITE, BLACK, BOTH};
 
+//information about a move
 typedef struct{
     
     short enPas;
@@ -43,11 +43,11 @@ typedef struct{
 
 }MOVE;
 
-
+//information about the board
 typedef struct{
     
     U64 piece_bb[12];
-    U64 combine_bb[3];
+    U64 position_bb[3];
 
     char side;
     short enPas;
@@ -59,7 +59,6 @@ typedef struct{
 }BOARD;
 
 // MACROS
-
 #define max(a,b) (a > b ? a : b)
 #define min(a,b) (a > b ? a : b)
 

@@ -6,22 +6,25 @@ BOARD board;
 char* fen = STARTING_FEN;
 char* p2c = INT_TO_CHAR;
 
+//sets up the game board from a given FEN
 void buildBoard(const char* fen){
     int i = 0, x = 0;
+
+    //builds the bit boards for type, color, and combined based of FEN
     while (fen[i] != ' '){
         switch (fen[i]){
-            case 'p': set_bit(board.piece_bb[BP], x); set_bit(board.combine_bb[BLACK], x); set_bit(board.combine_bb[BOTH], x++);break;
-            case 'b': set_bit(board.piece_bb[BB], x); set_bit(board.combine_bb[BLACK], x); set_bit(board.combine_bb[BOTH], x++);break;
-            case 'n': set_bit(board.piece_bb[BN], x); set_bit(board.combine_bb[BLACK], x); set_bit(board.combine_bb[BOTH], x++);break;
-            case 'r': set_bit(board.piece_bb[BR], x); set_bit(board.combine_bb[BLACK], x); set_bit(board.combine_bb[BOTH], x++);break;
-            case 'q': set_bit(board.piece_bb[BQ], x); set_bit(board.combine_bb[BLACK], x); set_bit(board.combine_bb[BOTH], x++);break;
-            case 'k': set_bit(board.piece_bb[BK], x); set_bit(board.combine_bb[BLACK], x); set_bit(board.combine_bb[BOTH], x++);break;
-            case 'P': set_bit(board.piece_bb[WP], x); set_bit(board.combine_bb[WHITE], x); set_bit(board.combine_bb[BOTH], x++);break;
-            case 'B': set_bit(board.piece_bb[WB], x); set_bit(board.combine_bb[WHITE], x); set_bit(board.combine_bb[BOTH], x++);break;
-            case 'N': set_bit(board.piece_bb[WN], x); set_bit(board.combine_bb[WHITE], x); set_bit(board.combine_bb[BOTH], x++);break;
-            case 'R': set_bit(board.piece_bb[WR], x); set_bit(board.combine_bb[WHITE], x); set_bit(board.combine_bb[BOTH], x++);break;
-            case 'Q': set_bit(board.piece_bb[WQ], x); set_bit(board.combine_bb[WHITE], x); set_bit(board.combine_bb[BOTH], x++);break;
-            case 'K': set_bit(board.piece_bb[WK], x); set_bit(board.combine_bb[WHITE], x); set_bit(board.combine_bb[BOTH], x++);break;
+            case 'p': set_bit(board.piece_bb[BP], x); set_bit(board.position_bb[BLACK], x); set_bit(board.position_bb[BOTH], x++);break;
+            case 'b': set_bit(board.piece_bb[BB], x); set_bit(board.position_bb[BLACK], x); set_bit(board.position_bb[BOTH], x++);break;
+            case 'n': set_bit(board.piece_bb[BN], x); set_bit(board.position_bb[BLACK], x); set_bit(board.position_bb[BOTH], x++);break;
+            case 'r': set_bit(board.piece_bb[BR], x); set_bit(board.position_bb[BLACK], x); set_bit(board.position_bb[BOTH], x++);break;
+            case 'q': set_bit(board.piece_bb[BQ], x); set_bit(board.position_bb[BLACK], x); set_bit(board.position_bb[BOTH], x++);break;
+            case 'k': set_bit(board.piece_bb[BK], x); set_bit(board.position_bb[BLACK], x); set_bit(board.position_bb[BOTH], x++);break;
+            case 'P': set_bit(board.piece_bb[WP], x); set_bit(board.position_bb[WHITE], x); set_bit(board.position_bb[BOTH], x++);break;
+            case 'B': set_bit(board.piece_bb[WB], x); set_bit(board.position_bb[WHITE], x); set_bit(board.position_bb[BOTH], x++);break;
+            case 'N': set_bit(board.piece_bb[WN], x); set_bit(board.position_bb[WHITE], x); set_bit(board.position_bb[BOTH], x++);break;
+            case 'R': set_bit(board.piece_bb[WR], x); set_bit(board.position_bb[WHITE], x); set_bit(board.position_bb[BOTH], x++);break;
+            case 'Q': set_bit(board.piece_bb[WQ], x); set_bit(board.position_bb[WHITE], x); set_bit(board.position_bb[BOTH], x++);break;
+            case 'K': set_bit(board.piece_bb[WK], x); set_bit(board.position_bb[WHITE], x); set_bit(board.position_bb[BOTH], x++);break;
             case '/': break; 
             case '1': x++; break; 
             case '2': x += 2; break; 
@@ -35,9 +38,12 @@ void buildBoard(const char* fen){
         }
         i++;    
     }
+
+    //sets side to go from FEN
     board.side = fen[++i];
     i+= 2;
     
+    //sets castle permissions from FEN
     while (fen[i] != ' '){
         switch (fen[i]){
         case 'K': set_bit(board.castPerm, WKC); break;
@@ -49,14 +55,17 @@ void buildBoard(const char* fen){
         i++;
     }
 
+    //sets en passant square from FEN
     if(fen[++i] != '-')
         board.enPas = (fen[i++] - 'a') + (8 * ((short)fen[i++] - 1));
 
+    //sets the amount of half and full moves from FEN
     board.fullMove = (short)fen[++i];
     board.halfMove = (short)fen[++i];
 
 }
 
+//prints out game board to console
 void printBoard(){
     int square;
     int piece = -1;
@@ -79,6 +88,7 @@ void printBoard(){
     printf("\n");
 }
 
+//prints out bit board to console
 void printBB(U64 i){
     int square;
     printf("\n");
