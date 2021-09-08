@@ -9,28 +9,17 @@
 typedef unsigned long long U64;
 
 //bitboard of all files
-const U64 H_FILE = 0x8080808080808080ULL;
-const U64 G_FILE = 0x4040404040404040ULL;
-const U64 F_FILE = 0x2020202020202020ULL;
-const U64 E_FILE = 0x1010101010101010ULL;
-const U64 D_FILE = 0x808080808080808ULL;
-const U64 C_FILE = 0x404040404040404ULL;
-const U64 B_FILE = 0x202020202020202ULL;
-const U64 A_FILE = 0x101010101010101ULL;
+const U64 FILES[8] = {0x101010101010101ULL, 0x202020202020202ULL, 0x404040404040404ULL, 0x808080808080808ULL, 0x1010101010101010ULL, 0x2020202020202020ULL, 0x4040404040404040ULL, 0x8080808080808080ULL};
 
 //bitboard of all ranks
-const U64 RANK_1 = 0xffULL;
-const U64 RANK_2 = 0xff00ULL;
-const U64 RANK_3 = 0xff0000ULL;
-const U64 RANK_4 = 0xff000000ULL;
-const U64 RANK_5 = 0xff00000000ULL;
-const U64 RANK_6 = 0xff0000000000ULL;
-const U64 RANK_7 = 0xff000000000000ULL;
-const U64 RANK_8 = 0xff00000000000000ULL;
+const U64 RANKS[8] = {0xffULL,0xffULL,0xff0000ULL,0xff000000ULL,0xff00000000ULL,0xff0000000000ULL,0xff000000000000ULL,0xff00000000000000ULL};
 
 //piece encoding
 enum { WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK};
 
+enum{RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8};
+
+enum{A_FILE, B_FILE, C_FILE, D_FILE, E_FILE, F_FILE, G_FILE, H_FILE};
 //squares
 enum{
     a8, b8, c8, d8, e8, f8, g8, h8,
@@ -69,6 +58,9 @@ typedef struct{
 // MACROS
 #define max(a,b) (a > b ? a : b)
 #define min(a,b) (a > b ? a : b)
+
+#define get_rank(square) (square/8)
+#define get_file(square) (square%8)
 
 #define set_bit(bitboard, square) ((bitboard) |= (1ULL << (square)))
 #define get_bit(bitboard, square) ((bitboard) & (1ULL << (square)))

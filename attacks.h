@@ -4,6 +4,8 @@
 #include "def.h"
 //preset bitboard for knights moves
 const U64 KNIGHT_MOVES = 0x5088008850000000ULL;
+const U64 RISING_DIAGONAL = 0x102040810204080ULL;
+const U64 FALLING_DIAGONAL = 0x8040201008040201ULL;
 
 //magic number bs
 const U64 rookMagics[64] = {
@@ -56,5 +58,16 @@ const int bishopIndexBits[64] = {
     5, 5, 5, 5, 5, 5, 5, 5,
     6, 5, 5, 5, 5, 5, 5, 6
 };
+
+//MACROS
+#define LINE_NORTH(square) (FILES[get_file(square)] >> ((64 - get_rank(square)) << 3))
+#define LINE_SOUTH(square) (FILES[get_file(square)] << ((get_rank(square) + 1) << 3))
+#define LINE_EAST(square) ((RANKS[get_rank(square)] << (get_file(square) + 1)) & RANKS[get_rank(square)])
+#define LINE_WEST(square) ((RANKS[get_rank(square)] >> (8 - get_file(square))) & RANKS[get_rank(square)])
+
+#define LINE_NE(square) (RISING_DIAGONAL << square)
+#define LINE_NW(square) (RISING_DIAGONAL >> square)
+#define LINE_SE(square) (FALLING_DIAGONAL << square)
+#define LINE_SW(square) (FALLING_DIAGONAL >> square)
 
 #endif

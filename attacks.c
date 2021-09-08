@@ -28,7 +28,7 @@ void genKnightAttacks(){
     U64 board;
     for(int square = 0; square < 64; square++){
         board = KNIGHT_MOVES << (max(square - f3, f3 - square));
-        knightAttacks[square] = board & ~(((square % 8) < 3) ? H_FILE|G_FILE : A_FILE|B_FILE);
+        knightAttacks[square] = board & ~(((square % 8) < 3) ? FILES[H_FILE]|FILES[G_FILE] : FILES[A_FILE]|FILES[B_FILE]);
     }
 }
 
@@ -36,62 +36,45 @@ void genKnightAttacks(){
 void genKingAttack(){
     U64 board = 1ULL;
     for(int square = 0; square < 64; square++){
-        kingAttacks[square] = (((board << 7) | (board >> 9) | (board >> 1)) & (~H_FILE)) |
-        (((board << 9) | (board >> 7) | (board << 1)) & (~A_FILE)) |
+        kingAttacks[square] = (((board << 7) | (board >> 9) | (board >> 1)) & (~FILES[H_FILE])) |
+        (((board << 9) | (board >> 7) | (board << 1)) & (~FILES[A_FILE])) |
         ((board >> 8) | (board << 8));
     }
 }
 
 //generates the mask for bishops to be used in generating magic bitboards
-U64 genBishopMask(int square){
-    U64 mask = 0ULL;
-    int r, f;
-    int tr = square/8;
-    int tf = square%8;
+void genBishopMask(){
+    int rank, file;
+    int tr;
+    int tf;
 
-    for (r = tr + 1, f = tf + 1; r <= 6 && f <= 6; r++, f++){
-        mask |= (1ULL << (r * 8 + f));
-    }
+    for(int square = 0; square < 64; square++){
+        tr = get_rank(square);
+        tf = get_file(square);
+        for (rank = tr + 1, file = tf + 1; rank <= 6 && file <= 6; rank++, file++){
+            bishopMask[square] |= (1ULL << (rank * 8 + file));
+        }
 
-    for (r = tr - 1, f = tf + 1; r >= 1 && f <= 6; r--, f++){
-        mask |= (1ULL << (r * 8 + f));
-    }
+        for (rank = tr - 1, file = tf + 1; rank >= 1 && file <= 6; rank--, file++){
+            bishopMask[square] |= (1ULL << (rank * 8 + file));
+        }
 
-    for (r = tr + 1, f = tf - 1; r <= 6 && f >= 1; r++, f--){
-        mask |= (1ULL << (r * 8 + f));
+        for (rank = tr + 1, file = tf - 1; rank <= 6 && file >= 1; rank++, file--){
+            bishopMask[square] |= (1ULL << (rank * 8 + file));
+        }
+        
+        for (rank = tr - 1, file = tf - 1; rank >=1 && file >= 1; rank--, file--){
+            bishopMask[square] |= (1ULL << (rank * 8 + file));
+        }        
     }
-    
-    for (r = tr - 1, f = tf - 1; r >=1 && f >= 1; r--, f--){
-        mask |= (1ULL << (r * 8 + f));
-    }
-
-    return mask;
 }
 
 //generates the mask for rooks to be used in generating magic bitboards
-U64 genRookMask(int square){
-    U64 mask = 0ULL;
-    int r, f;
-    int tr = square/8;
-    int tf = square%8;
-
-    for (r = tr + 1; r <= 6 ; r++){
-        mask |= (1ULL << (r * 8 + tf));
+void genRookMask(){
+    for(int square = 0; square < 64; square++){
+        rookMask[square] = ~(FILES[A_FILE] | FILES[H_FILE] | RANKS[RANK_1] | RANKS[RANK_8]) & 
+            (LINE_NORTH(square) | LINE_SOUTH(square) | LINE_EAST(square) | LINE_WEST(square));
     }
-
-    for (f = tf + 1; f <= 6; f++){
-        mask |= (1ULL << (tr * 8 + f));
-    }
-
-    for (r = tr - 1; r >= 1; r--){
-        mask |= (1ULL << (r * 8 + tf));
-    }
-    
-    for (f = tf - 1;f >= 1; f--){
-        mask |= (1ULL << (tr * 8 + f));
-    }
-
-    return mask;
 }
 
 U64 calcBishopMagic(int square, int blocker){
@@ -104,8 +87,10 @@ U64 calcQueenAttack(int square, int blocker){
 
 //initializes all pregen attack moves
 void initAttacks(){
-    precalcPawnAttacks();
-    precalcKnightAttacks();
-    precalcKnightAttacks();
+    genPawnAttacks();
+    genKingAttack();
+    genKingAttack();
+    genBishopMask();
+    genRookMask();
 }
 
