@@ -1,13 +1,11 @@
-#include <stdio.h>
-#include <string.h>
-#include "main.h"
+#include "def.h"
+#include "attacks.c"
 
 BOARD board;
-char* fen = STARTING_FEN;
-char* p2c = INT_TO_CHAR;
+char *fen = STARTING_FEN;
 
 //sets up the game board from a given FEN
-void buildBoard(const char* fen){
+void buildBoard(const char *fen){
     int i = 0, x = 0;
 
     //builds the bit boards for type, color, and combined based of FEN
@@ -71,7 +69,7 @@ void printBoard(){
     int piece = -1;
     printf("    A    B    C    D    E    F    G    H\n");
     for (int r = 0; r < 8; r++){
-        printf("%d ", r + 1);
+        printf("%d ", 8 - r);
         for(int f = 0; f < 8; f++){ 
             square = f + (8 * r);
             for(int p = 0; p < 13; p++){
@@ -80,7 +78,7 @@ void printBoard(){
                     break;
                 }
             }
-            printf("| %c |", (piece == -1) ? '-' : p2c[piece]);
+            printf("| %c |", (piece == -1) ? '-' : INT_TO_CHAR[piece]);
             piece = -1;
         }
         printf("\n");
@@ -89,13 +87,13 @@ void printBoard(){
 }
 
 //prints out bit board to console
-void printBB(U64 i){
+void printBB(U64 bb){
     int square;
     printf("\n");
     for (int x = 0; x < 8; x++){
         for (int y = 0; y < 8; y++){
             square = y + (8 * x);
-            if(get_bit(i,square)){
+            if(get_bit(bb,square)){
                 printf("| 1 |");
             }else{
                 printf("| 0 |");
@@ -108,5 +106,5 @@ void printBB(U64 i){
 
 void main(){
     buildBoard(fen);
-    printBoard();
+    initAttacks();
 }
