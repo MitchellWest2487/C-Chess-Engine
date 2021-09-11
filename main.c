@@ -58,7 +58,7 @@ void buildBoard(const char *fen){
 
     //sets en passant square from FEN
     if(fen[++i] != '-')
-        board.enPas = (fen[i++] - 'a') + (8 * ((short)fen[i++] - 1));
+        board.enPas = (fen[i++] - 'a') + (((short)fen[i++] - 1) << 3);
 
     //sets the amount of half and full moves from FEN
     board.fullMove = (short)fen[++i];
@@ -74,7 +74,7 @@ void printBoard(){
     for (int r = 7; r > -1; r--){
         printf("%d ", 8 - r);
         for(int f = 0; f < 8; f++){
-            square = f + (8 * r);
+            square = f + (r << 3);
             for(int p = 0; p < 13; p++){
                 if(get_bit(board.piece_bb[p], square)){
                     piece = p;
@@ -95,12 +95,8 @@ void printBB(U64 bb){
     printf("\n");
     for (int x = 7; x > -1; x--){
         for (int y = 0; y < 8; y++){
-            square = y + (8 * x);
-            if(get_bit(bb,square)){
-                printf("| 1 |");
-            }else{
-                printf("| 0 |");
-            }
+            square = y + (x << 3);
+            get_bit(bb,square) ? printf("| 1 |") : printf("| 0 |");
         }
         printf("\n");
     }
@@ -110,6 +106,4 @@ void printBB(U64 bb){
 void main(){
     buildBoard(fen);
     initAttacks();
-    //printBoard();
-    printBB(bishopMask[e4]);
 }

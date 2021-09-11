@@ -3,7 +3,6 @@
 
 #include "def.h"
 //preset bitboard for knights moves
-const U64 KNIGHT_MOVES = 0xA1100110AULL;
 const U64 RISING_DIAGONAL = 0x102040810204080ULL;
 const U64 FALLING_DIAGONAL = 0x8040201008040201ULL;
 
