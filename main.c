@@ -106,5 +106,4 @@ void printBB(U64 bb){
 void main(){
     buildBoard(fen);
     initAttacks();
-
 }
