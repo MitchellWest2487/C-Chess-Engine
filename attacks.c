@@ -79,26 +79,26 @@ U64 bishopAttactOTF(int square, U64 block){
     int tr = get_rank(square);
     int tf = get_file(square);
 
-    for (rank = tr + 1, file = tf + 1; rank <= 6 && file <= 6; rank++, file++){
-        attack |= (1ULL << ((rank << 3) + file));
+    for (rank = tr + 1, file = tf + 1; rank <= 7 && file <= 7; rank++, file++){
+        set_bit(attack, ((rank << 3) + file));
         if ((1ULL << ((rank << 3) + file)) & block) 
             break;
     }
 
-    for (rank = tr - 1, file = tf + 1; rank >= 1 && file <= 6; rank--, file++){
-        attack |= (1ULL << ((rank << 3) + file));
+    for (rank = tr - 1, file = tf + 1; rank >= 0 && file <= 7; rank--, file++){
+        set_bit(attack, ((rank << 3) + file));
         if ((1ULL << ((rank << 3) + file)) & block) 
             break;        
     }
 
-    for (rank = tr + 1, file = tf - 1; rank <= 6 && file >= 1; rank++, file--){
-        attack |= (1ULL << ((rank << 3) + file));
+    for (rank = tr + 1, file = tf - 1; rank <= 7 && file >= 0; rank++, file--){
+        set_bit(attack, ((rank << 3) + file));
         if ((1ULL << ((rank << 3) + file)) & block) 
             break;       
     }
 
-    for (rank = tr - 1, file = tf - 1; rank >=1 && file >= 1; rank--, file--){
-        attack |= (1ULL << ((rank << 3) + file));
+    for (rank = tr - 1, file = tf - 1; rank >= 0 && file >= 0; rank--, file--){
+        set_bit(attack, ((rank << 3) + file));
         if ((1ULL << ((rank << 3) + file)) & block) 
             break;
     }

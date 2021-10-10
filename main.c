@@ -106,4 +106,6 @@ void printBB(U64 bb){
 void main(){
     buildBoard(fen);
     initAttacks();
+
+    printBB(getBishopAttacks(f4, 0ULL));
 }
