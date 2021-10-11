@@ -1,21 +1,17 @@
 #ifndef DEF_H
 #define DEF_H
-
 #include<stdio.h>
-
-#define STARTING_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-#define INT_TO_CHAR "PNBRQKpnbrqk"
 
 typedef unsigned long long U64;
 
 //bitboard of all files
-const U64 FILES[8] = {0x101010101010101ULL, 0x202020202020202ULL, 0x404040404040404ULL, 0x808080808080808ULL, 0x1010101010101010ULL, 0x2020202020202020ULL, 0x4040404040404040ULL, 0x8080808080808080ULL};
+extern U64 FILES[8];
 
 //bitboard of all ranks
-const U64 RANKS[8] = {0xffULL,0xff00ULL,0xff0000ULL,0xff000000ULL,0xff00000000ULL,0xff0000000000ULL,0xff000000000000ULL,0xff00000000000000ULL};
+extern U64 RANKS[8];
 
 //piece encoding
-enum { WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK};
+enum {WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK};
 
 enum{A_FILE, B_FILE, C_FILE, D_FILE, E_FILE, F_FILE, G_FILE, H_FILE};
 enum{RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8};
@@ -53,14 +49,13 @@ typedef struct{
 
 }BOARD;
 
-
-
 // MACROS
 #define max(a,b) (a > b ? a : b)
 #define min(a,b) (a > b ? a : b)
 
 #define get_rank(square) (square/8)
 #define get_file(square) (square%8)
+#define get_square(rank, file) ((rank<<3) + file)
 
 #define set_bit(bitboard, square) ((bitboard) |= (1ULL << (square)))
 #define get_bit(bitboard, square) ((bitboard) & (1ULL << (square)))
@@ -69,4 +64,14 @@ typedef struct{
 #define count_bits(bitboard) __builtin_popcountll(bitboard)
 #define get_lsb(bitboard) (__builtin_ffsll(bitboard) - 1)
 #define get_msb(bitboard) (63 - __builtin_clzll(bitboard))
+
+#define LINE_NORTH(square) (FILES[get_file(square)] << ((get_rank(square) + 1) << 3))
+#define LINE_SOUTH(square) (FILES[get_file(square)] >> ((7 - get_rank(square)) << 3) + 1)
+#define LINE_EAST(square) ((RANKS[get_rank(square)] << (get_file(square) + 1)) & RANKS[get_rank(square)])
+#define LINE_WEST(square) ((RANKS[get_rank(square)] >> (8 - get_file(square))) & RANKS[get_rank(square)])
+
+#define LINE_NE(square) (RISING_DIAGONAL << square)
+#define LINE_NW(square) (RISING_DIAGONAL >> square)
+#define LINE_SE(square) (FALLING_DIAGONAL << square)
+#define LINE_SW(square) (FALLING_DIAGONAL >> square)
 #endif

@@ -1,50 +1,35 @@
-include "def.h"
+#include "moves.h"
 
-int isLegalMove(int square, int piece, int color, BOARD board){
-  switch (piece) {
-    case WP:
-    case BP:
-      return checkPawnMove(color); break;
-    case WN:
-    case BN:
-      return checkKnightMove(color); break;
-    case WK:
-    case BK:
-      return checkKingMove(); break;
-    case WB:
-    case BB:
-      return checkBishopMove(); break;
-    case WR:
-    case BR:
-      return checkRookMove(); break;
-    case WQ:
-    case BQ:
-      return checkBishopMove() | checkRookMove(); break;
+U64 getWhitePawnMoves(BOARD board){
+  U64 move = 0ULL;
+  U64 pawnBB = board.piece_bb[WP];
+  int square;
 
-    default: return -1; break;
+  move = (pawnBB << 8) | ((pawnBB & RANKS[RANK_2]) << 16);
+  move &= ~board.position_bb[BOTH];
+
+  for(int numPawn = 0; numPawn <= count_bits(pawnBB); numPawn++){
+    square = get_lsb(pawnBB);
+    pop_bit(pawnBB, square);
+    move |= pawnAttacks[WHITE][square] & board.position_bb[BLACK];
   }
+
+  return move;
 }
 
-int checkPawnMove(int color, int square){
-  return 0;
-}
+U64 getBlackPawnMoves(BOARD board){
+  U64 move = 0ULL;
+  U64 pawnBB = board.piece_bb[BP];
+  int square;
 
-int checkKnightMove(int color){
-  return 0;
-}
+  move = (pawnBB << 8) | ((pawnBB & RANKS[RANK_2]) << 16);
+  move &= ~board.position_bb[BOTH];
 
-int checkKingMove(){
-  return 0;
-}
+  for(int numPawn = 0; numPawn <= count_bits(pawnBB); numPawn++){
+    square = get_lsb(pawnBB);
+    pop_bit(pawnBB, square);
+    move |= pawnAttacks[BLACK][square] & board.position_bb[WHITE];
+  }
 
-int checkBishopMove(){
-  return 0;
-}
-
-int checkRookMove(){
-  return 0;
-}
-
-int checkQueenMove(){
-  return 0;
+  return move;
 }

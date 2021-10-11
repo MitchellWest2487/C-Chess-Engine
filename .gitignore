@@ -2,3 +2,7 @@
 tempCodeRunnerFile.c
 main.exe
 \mingw64
+.vscode/configurationCache.log
+.vscode/dryrun.log
+.vscode/launch.json
+.vscode/targets.log
