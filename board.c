@@ -124,7 +124,7 @@ void printBoard(){
     int piece = -1;
     printf("    A    B    C    D    E    F    G    H\n");
     for (int r = 7; r > -1; r--){
-        printf("%d ", 8 - r);
+        printf("%d ", r + 1);
         for(int f = 0; f < 8; f++){
             square = get_square(r,f);
             for(int p = 0; p < 13; p++){
