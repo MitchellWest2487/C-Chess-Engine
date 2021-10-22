@@ -143,7 +143,6 @@ void printBoard(){
 
 //prints out bit board to console
 void printBB(U64 bb){
-    int square;
     printf("\n");
     for (int r = 7; r > -1; r--){
         for (int f = 0; f < 8; f++){
